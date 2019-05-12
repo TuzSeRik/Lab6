@@ -113,7 +113,7 @@ class Collection {
         void initialise(String key){
             try {
                 collection = new PriorityQueue<>();
-                Scanner reader = new Scanner(new File("collectionStorage.csv"));
+                Scanner reader = new Scanner(getClass().getResourceAsStream("/Server/collectionStorage.csv"));
                 while (reader.hasNext()){
                     Date date = new Date();
                     String current = reader.nextLine();
@@ -124,8 +124,6 @@ class Collection {
                     collection.add(CSV.fromCSV(current));
                 }
                 reader.close();
-            }catch (FileNotFoundException e){
-                System.err.println("Файл не найден! Проверьте его наличие в пути, указанном в INPUTPATH");
             }
             catch (DeserializationException e){
                 System.err.println("Ошибка представления данных в файле!");

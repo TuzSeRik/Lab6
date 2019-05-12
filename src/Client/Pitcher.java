@@ -1,25 +1,43 @@
 package Client;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.Socket;
 
 class Pitcher {
-    private Socket socket;
+    private FileReader fromFile;
+    private FileWriter toFile;
+    private ObjectInputStream from;
+    private ObjectOutputStream to;
 
-    Pitcher(Socket socket) {
-        this.socket = socket;
+    Pitcher(Socket socket) throws IOException{
+        from = new ObjectInputStream(socket.getInputStream());
+        to = new ObjectOutputStream(socket.getOutputStream());
+        try
+        {
+            fromFile = new FileReader("collectionStorage.csv");
+            toFile = new FileWriter("collectionStorage.csv");
+        } catch (FileNotFoundException e){System.err.println("Фаил не был найден!");}
+          catch (IOException e){e.printStackTrace();}
     }
 
 
 
-    void pitch(InputStream command) throws IOException {
-        socket.getOutputStream().write(command.read());
+    void pitch(String s) throws IOException {
+        to.writeUTF(s);
+        to.flush();
+        System.out.println(from.readUTF());
     }
 
-    InputStream complexPitch(InputStream command) throws IOException{
-        socket.getOutputStream().write(command.read());
-        return socket.getInputStream();
+    void complexPitch(String s) throws IOException {
+        to.writeUTF(s);
+        to.flush();
+        toFile.write(from.readUTF());
+        toFile.flush();
     }
+
+    void importPitch(String s) throws IOException {
+        to.writeUTF(s+fromFile.read());
+        to.flush();
+        }
 }
 //+

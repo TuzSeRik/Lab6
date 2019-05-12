@@ -7,12 +7,12 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args){
         Socket socket;
-        CommandsTranslator commandsTranslator = null;
+        Pitcher pitcher = null;
         Scanner scanner = new Scanner(System.in);
 
         try {
             socket = new Socket("localhost", 2038);
-            commandsTranslator = new CommandsTranslator(socket);
+            pitcher = new Pitcher(socket);
             System.out.println("Соединение успешно установленно!");
         } catch (IOException e){System.err.println("Не удалось установить соединение с сервером :(");}
 
@@ -30,14 +30,14 @@ public class Main {
 
                     input = scanner.nextLine();
                     if (input.equals("overwrite")){
-                        commandsTranslator.simpleCommand(input);
+                        pitcher.pitch(input);
                     }
                     if (input.equals("save")){
-                        commandsTranslator.complexCommand(input);
+                        pitcher.complexPitch(input);
                     }
                     if (input.equals("saveAll")){
-                        commandsTranslator.simpleCommand("overwrite");
-                        commandsTranslator.complexCommand("save");
+                        pitcher.pitch("overwrite");
+                        pitcher.complexPitch("save");
                     }
                     if (input.equals("quit")){
                         break;
@@ -48,7 +48,7 @@ public class Main {
 
                     input = scanner.nextLine();
                     if (input.equals("quitAll")){
-                        commandsTranslator.simpleCommand(input);
+                        pitcher.pitch(input);
                     }
                     if (input.contains("quit")){
                         System.out.println("Работа клиента заверщена!");
@@ -75,12 +75,11 @@ public class Main {
                         (input.equals("initialize")) || (input.equals("load")) ||
                                  (input.equals("remove_last")) || (input.equals("start")) ||
                                         (input.contains(" "))){
-                         commandsTranslator.simpleCommand(input);
+                         pitcher.pitch(input);
                 }
 
                 if (input.equals("import")){
-                    commandsTranslator.importCommand(input);
-                }
+                    pitcher.importPitch(input);                }
             }
         } catch (IOException e){e.printStackTrace();}
     }
